@@ -1,0 +1,31 @@
+version: '3.8'
+services:
+  database:
+    image: postgres:13
+    environment:
+      POSTGRES_USER: myuser
+      POSTGRES_PASSWORD: mypassword
+      POSTGRES_DB: mydb
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    ports:
+      - "5433:5432"
+
+  backend:
+    build: ./backend
+    ports:
+      - "3001:3001"
+    depends_on:
+      - database
+    environment:
+      DATABASE_URL: postgres://postgres.emappthydnlrkvjlxnxy:ToDoLatest4571@@aws-0-ap-south-1.pooler.supabase.com:5432/postgres
+
+  frontend:
+    build: ./frontend
+    ports:
+      - "3000:3000"
+    depends_on:
+      - backend
+
+volumes:
+  postgres_data:
